@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\AuthenticationController;
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\Auth\RegisterController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,19 +17,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::prefix('admin')
+    ->name('admin')
+    ->group(function () {
+        Route::middleware('guest:web')
+            ->group(function () {
+                Route::get('/auth/login', [LoginController::class, 'create'])->name('.auth.login');
+                Route::post('/auth/login', [LoginController::class, 'store']);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+                Route::get('/auth/register', [RegisterController::class, 'create'])->name('.auth.register');
+                Route::post('/auth/register', [RegisterController::class, 'store']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+                Route::get('/auth/verify', [AuthenticationController::class, 'create'])->name('.auth.verify');
+                Route::post('/auth/verify', [AuthenticationController::class, 'store']);
+            });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+        Route::middleware(['auth:web'])
+            ->group(function () {
+                Route::get('/dashboard', [DashboardController::class, 'index'])->name('.dashboard');
+            });
+    });
 
-require __DIR__ . '/auth.php';
