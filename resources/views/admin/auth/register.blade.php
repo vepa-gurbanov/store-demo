@@ -18,7 +18,7 @@
                            name="name"
                            id="name"
                            aria-describedby="name"
-                           placeholder="Enter Name...">
+                           placeholder="Enter Name..." autofocus>
                 </div>
                 <div class="form-group">
                     <input type="email"
@@ -27,6 +27,7 @@
                            id="email"
                            aria-describedby="email"
                            placeholder="Enter Email Address..."
+{{--                           value="{{ $data['email'] }}">--}}
                            value="{{ isset(session()->get('auth')['guest_admin']['email']) ? session()->get('auth')['guest_admin']['email'] : '' }}">
                 </div>
                 <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -37,7 +38,7 @@
             <div class="text-center">
                 <a class="small" href="{{ route('admin.dashboard') }}">Home</a>
                 <span class="text-dark">/</span>
-                <a class="small" href="{{ route('admin.auth.login') }}">Login</a>
+                <a class="small" href="{{ route('admin.dashboard') }}">Login</a>
             </div>
         </div>
     </div>

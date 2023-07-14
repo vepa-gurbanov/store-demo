@@ -1,10 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\Auth\AuthenticationController;
-use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,19 +21,21 @@ Route::prefix('admin')
     ->group(function () {
         Route::middleware('guest:web')
             ->group(function () {
-                Route::get('/auth/login', [LoginController::class, 'create'])->name('.auth.login');
-                Route::post('/auth/login', [LoginController::class, 'store']);
-
                 Route::get('/auth/register', [RegisterController::class, 'create'])->name('.auth.register');
                 Route::post('/auth/register', [RegisterController::class, 'store']);
 
-                Route::get('/auth/verify', [AuthenticationController::class, 'create'])->name('.auth.verify');
-                Route::post('/auth/verify', [AuthenticationController::class, 'store']);
+                Route::get('/auth/check', [AuthenticationController::class, 'stepOne'])->name('.auth.check');
+                Route::post('/auth/check', [AuthenticationController::class, 'check']);
+                Route::get('/auth/verify', [AuthenticationController::class, 'stepTwo'])->name('.auth.verify');
+                Route::post('/auth/verify', [AuthenticationController::class, 'verify']);
             });
 
         Route::middleware(['auth:web'])
             ->group(function () {
+                Route::post('/auth/logout', [AuthenticationController::class, 'destroy'])->name('.auth.logout');
+
                 Route::get('/dashboard', [DashboardController::class, 'index'])->name('.dashboard');
+                Route::get('/users', [UserController::class, 'index'])->name('.users');
             });
     });
 

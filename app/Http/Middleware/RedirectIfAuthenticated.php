@@ -17,12 +17,15 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        $guards = empty($guards) ? [null] : $guards;
+        if ($request->routeIs('admin.auth.*') and Auth::guard('web')->check()) {
+            return to_route(RouteServiceProvider::__DASHBOARD);
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
-            }
+//        } elseif ($request->path() == 'verification' and Auth::guard('customer_web')->check()) {
+//            return to_route('home');
+        } elseif (session()->has('auth') && $request->routeIs('admin.auth.check')) {
+            return to_route('admin.auth.verify');
+        } elseif (!session()->has('auth') && $request->routeIs('admin.auth.verify')) {
+            return to_route('admin.auth.check');
         }
 
         return $next($request);

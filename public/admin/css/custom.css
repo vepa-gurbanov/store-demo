@@ -1,0 +1,6 @@
+.tooltip .tooltip-inner {
+    --bs-tooltip-bg: #0d6efd;
+}
+.tooltip .tooltip-arrow::before {
+    --bs-tooltip-bg: #0d6efd;
+}
