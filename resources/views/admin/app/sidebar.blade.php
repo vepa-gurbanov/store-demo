@@ -11,12 +11,14 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
+    @foreach([['admin.dashboard', 'fas fa-fw fa-tachometer-alt', 'Dashboard'], ['admin.users', 'fa-fw bi-people-fill', 'Users']] as $sidebarLink)
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+    <li class="nav-item {{ request()->routeIs($sidebarLink[0]) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route($sidebarLink[0]) }}">
+            <i class="{{ $sidebarLink[1] }}"></i>
+            <span>{{ $sidebarLink[2] }}</span></a>
     </li>
+    @endforeach
 
     <!-- Divider -->
     <hr class="sidebar-divider">

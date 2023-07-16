@@ -44,4 +44,8 @@ class RegisterController extends Controller
             ->with($data);
     }
 
+
+    public function wait() {
+        return view('admin.auth.wait');
+    }
 }

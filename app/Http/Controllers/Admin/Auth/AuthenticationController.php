@@ -76,25 +76,16 @@ class AuthenticationController extends Controller
     {
         $validation = $request->validate(['otp_code' => ['required', 'integer', 'between:10000,99999']]);
 
-//        if ($validation->fails()) {
-//            return 'Validation failed!';
-//        } else {
-//            $validation = $validation->validated();
-//            return $validation;
-//        }
-
         $code = intval($validation['otp_code']);
+
         $session = session()->get('auth');
+
         $verification_id = isset(session()->get('auth')['admin']) ? 'admin' : 'guest_admin';
+
         $verification = Verification::where('id', $session[$verification_id]['verification_id'])->first();
+
         $validated = intval($verification->code) === $code && $verification->otp_expires_at->format('Y-m-d H:i') > now()->format('Y-m-d H:i');
-//        return [
-//            'code' => $code,
-//            'session' => $session,
-//            'request_is_admin_or_guest' => $verification_id,
-//            'verification' => $verification,
-//            'validated' => $verification->otp_expires_at->format('Y-m-d H:i'),
-//        ];
+
         if ($verification && $validated) {
 
             if (array_key_exists('guest_admin', $session)) {
@@ -103,21 +94,31 @@ class AuthenticationController extends Controller
                     'email' => $session['guest_admin']['email'],
                     'password' => bcrypt($code),
                 ]);
+
+                return to_route('admin.auth.wait');
+
             } else {
                 $user = User::where('id', $session['admin']['user_id'])->first();
             }
             Auth::guard('web')->login($user);
+
             $verification->update(['status' => 1]);
+
             session()->forget('auth');
 
             $data = [
                 'success' => 'Logged in!',
             ];
+
             return to_route(RouteServiceProvider::__DASHBOARD)
                 ->with($data);
+
         } elseif (intval($verification->code) != $code && $verification->otp_expires_at > now()) {
+
             $verification->attempts ++;
+
             $verification->update();
+
             if ($verification->attempts >= 3) {
                 session()->put('attempted', $session[$verification_id]['email']);
                 session()->forget('auth');

@@ -47,28 +47,7 @@
                                 @if($user->verified)
                                     <span class="badge text-bg-success">Verified</span>
                                 @else
-                                    <a href="#" class="badge text-bg-warning" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="verify" data-bs-target="adminVerifyModal-{{ $user->id }}">Pending</a>
-
-                                    <div class="modal fade" id="adminVerifyModal-{{ $user->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="adminVerifyModal-{{ $user->id }}-Label" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content small">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="adminVerifyModal-{{ $user->id }}-Label">Modal title</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="fw-bold text-opacity-75">
-                                                        Sure give access to Admin Site?
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-secondary w-50" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary w-50">Understood</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    <span class="badge text-bg-warning">Pending</span>
                                 @endif
                             </td>
                             <td>{{ $user->updated_at->diffForHumans() }}</td>
